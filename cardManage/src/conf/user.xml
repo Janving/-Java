@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts SYSTEM "http://struts.apache.org/dtds/struts-2.5.dtd" >
+<struts>
+    <package name="user" namespace="/user" extends="mydefault">
+    <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="regist" class="action.UserAction" method="register">
+            <result name="register">../index/register.jsp</result>
+            <result>../index/login.jsp</result>
+        </action>
+        
+        <action name="login" class="action.UserAction" method="login">
+            <result name="loginFail">../index/login.jsp</result>
+             <!--   <result type="chain">queryCard</result>   -->
+         <result>../main/main.jsp</result>
+        </action>
+        
+        <action name="exit" class="action.UserAction" method="logout">
+            <result>../index/login.jsp</result>
+        </action>
+        
+        <action name="updatePwd" class="action.UserAction" method="updatePwd">
+            <result>../index/login.jsp</result>
+        </action>
+        
+        <action name="updateUser" class="action.UserAction" method="updateUser">
+              <result>../main/userInfo.jsp</result>
+        </action>
+        
+        <action name="forgot" class="action.UserAction" method="forgot">
+            <result>../index/emailsuccess.html</result>
+        </action>
+    </package>
+
+</struts>

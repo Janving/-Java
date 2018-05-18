@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts SYSTEM "http://struts.apache.org/dtds/struts-2.5.dtd" >
+<struts>
+    <package name="card" namespace="/" extends="mydefault">
+    <global-allowed-methods>regex:.*</global-allowed-methods>
+   
+        <action name="*Card" class="action.CardAction"  method="{1}">
+            <interceptor-ref name="myStack"></interceptor-ref>
+            <result name="addSuccess" type="redirect">/card/queryCard.action</result>
+            <result name="addFail">../../addCard.jsp</result>
+            <result name="querySuccess">/main/queryCards.jsp</result>
+         
+            <result name="deleteSelect">/main/deleteSelect.jsp</result>
+            <result name="deleteSuccess" type="redirect">/card/queryCard.action?act=deleteSelect</result>
+            <result name="updateSelect">/main/deleteSelect.jsp</result>
+            <result name="updateAcard">/main/updateCard.jsp</result>
+            <result name="detailcard">../main/detail.jsp</result>
+            <result name="updateSuccess" type="redirect">/card/queryCard.action?act=updateSelect</result>
+        </action>
+     
+     
+    </package>
+
+
+</struts>
