@@ -14,7 +14,7 @@
  <base href="<%=basePath %>">
 </head>
 <body>
-    您没有登陆成功，无权操作。请<a href="login.jsp" target="_top">登陆</a>
+    您没有登陆成功，无权操作。请<a href="index/login.jsp" target="_top">登陆</a>
 
 </body>
 </html>

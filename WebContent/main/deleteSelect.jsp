@@ -145,9 +145,9 @@
           <td>
              <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                    <button  type="reset" class="am-btn am-btn-default am-btn-xs am-text-secondary" ><a href="card/selectACard.action?id=<s:property value="id"/>&act=updateAcard" target="center"><span class="am-icon-pencil-square-o"> </span>编辑</a></button>
-                    <button type="reset" class="am-btn am-btn-default am-btn-xs"><span class="am-icon-copy"><a href="card/selectACard.action?id=<s:property value="id"/>"target="center"></span> 详情</a></button>
-                    <button type="reset" class="am-btn am-btn-default am-btn-xs am-text-danger"><a href="javascript:checkDel('<s:property value="id"/>')"><span class="am-icon-trash-o"></span> 删除</a></button>
+                    <button  type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" ><a href="card/selectACard.action?id=<s:property value="id"/>&act=updateAcard" target="center"><span class="am-icon-pencil-square-o"> </span>编辑</a></button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs"><span class="am-icon-copy"><a href="card/selectACard.action?id=<s:property value="id"/>"target="center"></span> 详情</a></button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger"><a href="javascript:checkDel('<s:property value="id"/>')"><span class="am-icon-trash-o"></span> 删除</a></button>
                   </div>
                 </div>
                 </td>
@@ -167,15 +167,33 @@
           <s:param name="pageCur" value="pageCur+1"></s:param>
        </s:url>
   <div class="am-fr">
-    <ul class="am-pagination">
-      <li ><s:a href="%{url_pre}">«</s:a></li>
-      <li class="am-active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><s:a href="%{url_next}">»</s:a></li>
-    </ul>
+    <!-- 分页页码 -->
+        <s:url var= "url_pre" value="card/queryCard.action?act=deleteSelect">
+              <s:param name="pageCur" value="pageCur-1"></s:param>
+           </s:url>
+           <s:url var="url_next" value="card/queryCard.action?act=deleteSelect">
+               <s:param name="pageCur" value="pageCur+1"></s:param>
+            </s:url>
+         <ul class="am-pagination am-fr admin-content-pagination">
+         
+
+              <li> <s:a href="%{url_pre}">&laquo;</s:a></li>
+    
+            <s:iterator value="listPage" var="listpage">
+         
+            <s:if test="pageCur==#listpage.page">
+             <li class="am-active"> <s:a href="%{#listpage.url}"><s:property value="%{#listpage.page}"/></s:a></li>
+            </s:if>
+             <s:else>
+              <li > <s:a href="%{#listpage.url}"><s:property value="%{#listpage.page}"/></s:a></li>
+             </s:else>
+         
+             </s:iterator>
+             
+             
+              <li><s:a href="%{url_next}">&raquo;</s:a></li>
+            </ul>
+              <!-- 分页页码 结束-->
   </div>
 </div>
     

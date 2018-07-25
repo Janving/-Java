@@ -27,14 +27,14 @@ public class UserDao extends BaseDao{
 	}
 	
 	//注册
-	public boolean isRegist(String uname,String upass) throws Exception{
+	public boolean isRegist(User user) throws Exception{
 		boolean b= false;
 		Connection con=getConnection();
-		String sql="insert into usertable values(?,?,?)";
+		String sql="insert into usertable (userName,password,email) values(?,?,?)";
 		PreparedStatement ps=con.prepareStatement(sql);
-		ps.setString(1, uname);
-		ps.setString(2, upass);
-		ps.setString(3, null);
+		ps.setString(1, user.getUname());
+		ps.setString(2, user.getUpass());
+		ps.setString(3, user.getEmail());
 		int i=ps.executeUpdate();
 		if (i>0){
 			b=true;
@@ -42,6 +42,46 @@ public class UserDao extends BaseDao{
 		close(null,ps,con);
 		return b;
 	}
+	
+	
+	//当登陆时将登陆时间数据记录
+	public boolean isLoginRecord(String uname) throws Exception {	
+		boolean b= false;
+		Connection con=getConnection();
+		String sql="insert into loginrecord value(null,?,CURRENT_TIMESTAMP)";
+		System.out.println(uname);
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setString(1, uname);
+		int i=ps.executeUpdate();
+		if (i>0){
+			b=true;
+		}
+		close(null,ps,con);
+		return b;
+		
+	}
+	
+	//获得昨日登陆记录
+	public int lastdayCount() throws Exception {
+		Connection con=getConnection();
+		String sql="select  count(distinct(userName) ) as sum,loginTime  FROM loginrecord  GROUP BY Day(loginTime)  order by loginTime desc limit 1,1";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs= ps.executeQuery();
+		rs.next();
+		int sum=rs.getInt(1);
+      
+		return sum;
+	}
+	//统计昨日新增订单
+	public int lastdayOrderItem() throws SQLException {
+		String sql="select count(id) as sum,create_time from orderitem group by Day(create_time) order by create_time desc limit 1,1";
+		ResultSet rs=BaseDao.commonQuery(sql);
+		rs.next();
+		int sum=rs.getInt(1);
+		return sum;
+		
+	}
+	
 	
 	//登陆
 	
@@ -57,6 +97,7 @@ public class UserDao extends BaseDao{
 		if(rs.next()) {
 			b=true;
 			user.setEmail(rs.getString("email"));
+		    user.setId(rs.getInt("id"));
 		}
 		close(rs,ps,con);
 		return b;
@@ -78,6 +119,35 @@ public class UserDao extends BaseDao{
 		close(null,ps,con);
 		return b;
 	}
+	
+	public int userCount() throws Exception {
+		
+		Connection con=getConnection();
+		String sql="select count(*) from usertable";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs= ps.executeQuery();
+		rs.next();
+		int sum=rs.getInt(1);
+
+		return sum;
+	
+	}
+	
+	public int cardCount() throws Exception {
+
+		Connection con=getConnection();
+		String sql="select count(*) from cardinfo";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs= ps.executeQuery();
+		rs.next();
+		int sum=rs.getInt(1);
+	
+		return sum;
+	}
+	
+	
+	
+	
 	
 	/*
 	 * 更新信息

@@ -17,7 +17,7 @@
 	<base href="<%=basePath %>">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Minimal and Clean Sign up / Login and Forgot Form by FreeHTML5.co</title>
+	<title>客户管理系统—注册页面</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Free HTML5 Template by FreeHTML5.co" />
 	<meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
@@ -71,6 +71,8 @@
     	var name=document.registForm.uname.value;
     	var pwd = document.registForm.upass.value;
     	var repwd=document.registForm.reupass.value;
+    	var email=document.registForm.email.value;
+    	var myReg=/^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
     	if(name==""){
     		alert("请输入姓名!");
     		document.registForm.uname.focus();
@@ -88,11 +90,18 @@
     	}
     	if(pwd!=repwd){
     		
-    		alert("2次密码不一致，请重新输入！"+repwd);
+    		alert("2次密码不一致，请重新输入！");
     		document.registForm.upass.value="";
     		document.registForm.reupass.value="";
     		document.registForm.upass.focus();
     		return false;
+    	}
+    
+    	if(!(myReg.test(email))){
+    		alert("邮箱格式不正确！");
+    		document.registForm.email.focus();
+    		return false;
+    		
     	}
     	document.registForm.flag.value="1";
     	document.registForm.submit();
@@ -111,7 +120,7 @@
 					
 
 					<!-- Start Sign In Form -->
-					<form action="user/regist.action"  method="post" class="fh5co-form animate-box"  name="registForm" data-animate-effect="fadeIn">
+					<form action="user/regist.action"  method="post" class="fh5co-form "  name="registForm" >
 						<input type="hidden" name="flag">
 						<h2>注册</h2>
 						
@@ -129,18 +138,22 @@
 						
 						<div class="form-group">
 							<label for="password" class="sr-only">Password</label>
-							<input type="password" class="form-control" id="upass" name="upass" placeholder="密码" autocomplete="off">
+							<input type="password" class="form-control" id="upass" name="upass" value="${requestScope.upass}"  placeholder="密码" autocomplete="off">
 						</div>
 						<div class="form-group">
 							<label for="re-password" class="sr-only">Re-type Password</label>
-							<input type="password" class="form-control" id="reupass" name="reupass" placeholder="再次确认密码" autocomplete="off">
+							<input type="password" class="form-control" id="reupass" name="reupass"  value="${requestScope.reupass}" placeholder="再次确认密码" autocomplete="off">
+						</div>
+						<div class="form-group">
+							<label for="email" class="sr-only">Re-type Password</label>
+							<input type="Email" class="form-control" id="email" name="email" placeholder="请输入邮箱"  value="${requestScope.email}" autocomplete="on">
 						</div>
 						
 						<div class="form-group">
-							<p>已经有账号? <a href="../index/login.jsp">前往登陆</a></p>
+							<p>已经有账号? <a href="index/login.jsp">前往登陆</a></p>
 						</div>
 						<div class="form-group">
-							<input type="submit" value="注册" class="btn btn-primary">
+							<input type="button" value="注册" class="btn btn-primary" onclick="allIsNull()">
 						</div>
 					</form>
 					<!-- END Sign In Form -->

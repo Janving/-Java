@@ -12,10 +12,74 @@
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
+  
+<style type="text/css">
+#preview{width:300px;height:270px;border:1px solid #000;overflow:hidden; border:none; }
+#imghead {filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+img{ border:none;}
+</style>
+  
+  <script type="text/javascript">
+      //图片上传预览    IE是用了滤镜。
+        function previewImage(file)
+        {
+          var MAXWIDTH  = 300; 
+          var MAXHEIGHT = 270;
+          var div = document.getElementById('preview');
+          if (file.files && file.files[0])
+          {
+              div.innerHTML ='<img id=imghead>';
+              var img = document.getElementById('imghead');
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){img.src = evt.target.result;}
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                 
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+</script>   
 </head>
 
 <body>
-
+  <s:form  method="post" action="../card/addCard.action" enctype="multipart/form-data" class="am-form am-form-horizontal">
  <div class="admin-content">
     <div class="am-cf am-padding">
       <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">添加信息</strong> / <small>add Card</small></div>
@@ -29,18 +93,21 @@
         <div class="am-panel am-panel-default">
           <div class="am-panel-bd">
             <div class="am-g">
-              <div class="am-u-md-4">
-                <img class="am-img-circle am-img-thumbnail" src="http://amui.qiniudn.com/bw-2014-06-19.jpg?imageView/1/w/1000/h/1000/q/80" alt=""/>
+              <div class="am-u-md-4" id="preview">
+             
+               <img id="imghead" width=100% height=auto border=0 src='a1.jpg'>
+              
               </div>
+               <hr>
               <div class="am-u-md-8">
                 <p>上传头像 </p>
-                <form class="am-form">
+                
                   <div class="am-form-group">
-                    <input type="file" id="user-pic">
+                    <s:file id="user-pic" name="logo" onchange="previewImage(this)" />
                     <p class="am-form-help">请选择要上传的文件...</p>
-                    <button type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
+                
                   </div>
-                </form>
+               
               </div>
             </div>
           </div>
@@ -53,7 +120,7 @@
       </div>
 
       <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
-      <s:form  method="post" action="../card/addCard.action" enctype="multipart/form-data" class="am-form am-form-horizontal">
+    
     
           <div class="am-form-group">
             <label for="name" class="am-u-sm-3 am-form-label">姓名 / Name</label>
@@ -107,10 +174,11 @@
               <s:reset class="am-btn am-btn-primary" value="重置"/>
             </div>
           </div>
-       </s:form>
+     
       </div>
     </div>
   </div>
+    </s:form>
   <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/amazeui.min.js"></script>
 <!--<![endif]-->

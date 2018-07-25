@@ -4,17 +4,26 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 
 
 public class BaseDao {
 
+	 public  static PreparedStatement pstmt;
+	 public static ResultSet rs;
+	 public static Connection conn;
+	
+	
 	static ArrayList<Connection>list = new ArrayList<Connection>();
 	//从连接池中获得一个连接
 	
 	public synchronized static Connection getConnection()throws Exception{
+		
+
 		Connection con =null;
 		if(list.size()>0) {
 			return list.remove(0);
@@ -40,7 +49,7 @@ public class BaseDao {
 				list.add(con);
 			}
 		}
-		
+	
 		return list.remove(0);
 	}
 	
@@ -73,5 +82,64 @@ public class BaseDao {
 		close(con);
 	}
 	
+	
+	/*
+	 * 增删
+	 * */
+	public static int commonUpdate(String sql,Object ...params) throws SQLException, Exception{
+		int result=0;
+		conn=getConnection();
+		try {
+			pstmt=conn.prepareStatement(sql);
+			if(params!=null && params.length>0){
+				setvalues(pstmt, params);
+				
+			}
+			result= pstmt.executeUpdate();
+		} catch (SQLException e) {
+			 
+			e.printStackTrace();
+		} catch (Exception e) {
+			 
+			e.printStackTrace();
+		}
+		
+		close(null,pstmt,conn);
+		return result;
+	}
+	
+	/**
+	 * 查
+	 * */
+	public static ResultSet commonQuery(String sql,Object ...params){
+		
+		try {
+			conn=getConnection();
+			pstmt=conn.prepareStatement(sql);
+			if(params!=null && params.length>0){
+				setvalues(pstmt, params);
+			}
+			rs=pstmt.executeQuery();
+		} catch (SQLException e) {
+			 
+			e.printStackTrace();
+		} catch (Exception e) {
+			 
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	/**
+	 * 
+	 * @throws Exception 
+	 * */
+	protected static void setvalues(PreparedStatement pstmt,Object ...params) throws Exception{
+		for(int i=0;i<params.length;i++){
+			Object obj=params[i];
+			pstmt.setObject(i+1, obj);
+		}
+	}
 	
 }

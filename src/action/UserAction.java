@@ -1,7 +1,11 @@
-package action;
+ package action;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -12,8 +16,9 @@ import dao.UserDao;
 import email.EmailTest;
 import entity.Card;
 import entity.User;
+import util.MyUtil;
 
-public class UserAction  extends ActionSupport implements RequestAware, ModelDriven<User>,SessionAware{
+public class UserAction  extends ActionSupport implements RequestAware, ModelDriven<User>,SessionAware,ApplicationAware{
 
 	/**
 	 * 
@@ -21,14 +26,70 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 	private static final long serialVersionUID = 1L;
 
 
-
+    private Map<String,Object> application;
 	//标记为，为0判断用户名是否可用；为1注册
 	private String flag;
 
 	private User user = new User();
+	private String reupass;
 	private Map<String,Object> request;
 	private Map<String,Object> session;
 	UserDao ud= new UserDao();
+	
+	//邮箱验证码
+	private String eName;
+	private String eIden;
+	
+	/*
+	 * 预备
+	 */
+	public String preregister() throws Exception {
+		
+		HttpServletRequest request=ServletActionContext.getRequest();  
+		String path=request.getContextPath();
+	    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/"; 
+		
+		String iden=MyUtil.getStringID();//生成邮箱识别码
+		user.setIden(iden);
+		application.put(user.getUname(), user);
+			
+		String text="请点击以下连接来验证你的邮箱"+ basePath+"user/confirm.action?eName="+user.getUname()+"&eIden="+user.getIden();
+		EmailTest et= new EmailTest();
+	    et.testSendEmail("验证邮箱",text,user.getEmail());
+	    	
+		return "preregister";
+			
+			
+		
+	}
+	
+	/*
+	 * 注册验证
+	 */
+	
+	public String confirm() throws Exception {
+		if(eName==null|ud.isExit(user.getUname())){
+			return "confirmfail";
+		}
+		 if(application.get(eName)!=null) {	 
+			 user=(User) application.get(eName); 
+			 if(user.getIden().equals(eIden)) {
+				 //如果验证码相等，则注入数据库
+				 if(ud.isRegist(user)) {
+						return SUCCESS;
+					}else {
+						return "registerfail";
+					}
+				 	
+			 }else {			 
+				 return "confirmfail";
+			 }
+			 
+		 }
+		 
+		return "error";	
+	}
+	
 	
 	/*
 	 * 注册
@@ -42,19 +103,27 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 					request.put("isExit", "true");
 				}
 				request.put("uname",user.getUname());
+				request.put("upass",user.getUpass());
+				request.put("email",user.getEmail());
+				request.put("reupass",reupass);
+				
 				return "register";
-			}else {                               //实现注册功能
-				if(ud.isRegist(user.getUname(), user.getUpass())) {
-					return SUCCESS;
-				}else {
-					return "register";
-				}
+			}else {
+				
+				String pre=preregister();//发送邮件
+				return pre;
 			}
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 			return ERROR;
 		}
+	
 	}
+	
+	
+
+	
 	
 	
 	/*
@@ -63,13 +132,24 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 	public String login() {
 		try {
 	
-			System.out.println(user.getUname()+user.getUpass());
+			
 			if(ud.isLogin(user)){
 			    session.put("uemail", user.getEmail());
 				session.put("userName",user.getUname());
 				session.put("userPWD", user.getUpass());
 				session.put("user",user);
-			    System.out.println(user.getEmail());
+			  
+				//录入登记时间记录
+				ud.isLoginRecord(user.getUname());
+				int userCount=ud.userCount();
+				int cardCount=ud.cardCount();
+				int lastdayCount=ud.lastdayCount();
+				int lastdayOrderItem=ud.lastdayOrderItem();
+				//存放用户客户总数
+				application.put("userCount", userCount);
+				application.put("cardCount", cardCount);
+				application.put("lastdayCount",lastdayCount);
+				application.put("lastdayOrderItem",lastdayOrderItem);
 				return SUCCESS;
 			}
 			//在页面使用<s:fielderror/>中取出错误信息
@@ -112,7 +192,7 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 	 * 修改用户信息
 	 */
 	public String updateUser() {
-		System.out.println(user.getEmail());
+		
 		try {
 			ud.updateUser(user);
 			refreshsession();
@@ -132,11 +212,11 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 		
 		if(ud.getUserbyName(user)) {
 
-			System.out.println(user.getUname());
+			
 			String text="你的密码是： "+user.getUpass()+" 不要再弄丢了哦";
-			System.out.println(text);
+		
 	    	EmailTest et= new EmailTest();
-	    	et.testSendEmail(text,user.getEmail());
+	    	et.testSendEmail("找回密码",text,user.getEmail());
 		}
 		return SUCCESS;
 		
@@ -146,7 +226,7 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 	 * 安全退出
 	 */
 	public String logout() {
-		//session.clear();
+		session.clear();
 		return SUCCESS;
 	}
 
@@ -202,6 +282,40 @@ public class UserAction  extends ActionSupport implements RequestAware, ModelDri
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+
+	public Map<String, Object> getApplication() {
+		return application;
+	}
+
+
+	public void setApplication(Map<String, Object> application) {
+		this.application = application;
+	}
+
+	public String geteName() {
+		return eName;
+	}
+
+	public void seteName(String eName) {
+		this.eName = eName;
+	}
+
+	public String geteIden() {
+		return eIden;
+	}
+
+	public void seteIden(String eIden) {
+		this.eIden = eIden;
+	}
+
+	public String getReupass() {
+		return reupass;
+	}
+
+	public void setReupass(String reupass) {
+		this.reupass = reupass;
 	}
 	
 	

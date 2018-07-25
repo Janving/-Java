@@ -40,6 +40,7 @@ public class LoginValidateInterceptor implements Interceptor {
 			return arg0.invoke();
 			
 		}else{
+			
 			//返回全局视图"nologon"
 			return "nologin";			
 			

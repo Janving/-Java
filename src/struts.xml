@@ -22,5 +22,8 @@
     </package>
     
  <include file="conf/user.xml"></include> 
-    <include file="conf/card.xml"></include>
+ <include file="conf/card.xml"></include>
+ <include file="conf/product.xml"></include>
+  <include file="conf/orderitem.xml"></include>
+    <include file="conf/message.xml"></include>
 </struts>

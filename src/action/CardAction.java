@@ -3,6 +3,7 @@ package action;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -14,6 +15,7 @@ import com.opensymphony.xwork2.ModelDriven;
 
 import dao.CardDao;
 import entity.Card;
+import entity.PageUrl;
 import util.MyUtil;
 
 public class CardAction extends ActionSupport implements ModelDriven<Card>,SessionAware{
@@ -31,6 +33,7 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 	private int pageCur;      
 	private int totalCount=0;//计算总共有多少个名片
 	private int totalPage=0;
+	private List<PageUrl> listPage=new ArrayList<PageUrl>();
 	File logo;                //图片文件对象
 	String logoFileName;
 	//查询名片信息
@@ -98,7 +101,7 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 	
 	
 	/*
-	 * 修改.
+	 * 修改
 	 * 
 	 */
 	 /**
@@ -150,8 +153,8 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 		 //修改名片信息
 		 try {
 			 cd.update(card);
-			 System.out.println(card.getId());
-			 return "updateSuccess";
+			
+			 return selectA();
 		 }catch(Exception e) {
 			 e.printStackTrace();
 			 return ERROR;
@@ -160,7 +163,7 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 	 }
 	
 	/*
-	 * 查询所有名片
+	 * 查询所有名片,主页
 	 */
 	
 	public String query() {
@@ -175,6 +178,26 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 				//返回大于或等于指定表达式的最小整数
 				totalPage=(int)Math.ceil((double)temp/10);
 			}
+			
+			for(int i=1;i<totalPage+1;i++) {
+				
+				if(i>(pageCur-3)&&i<(pageCur+3)) {
+				PageUrl pu= new PageUrl();
+				
+				pu.setPage(i);
+				String url;
+				if("updateSelect".equals(act)|"deleteSelect".equals(act)) {
+					url="card/queryCard.action?act=updateSelect&pageCur="+i;
+				}else {
+					 url="card/queryCard.action?pageCur="+i;
+				}
+				
+				
+				pu.setUrl(url);
+				listPage.add(pu);
+				}
+			}
+			
 			if((pageCur-1)*10>=temp) {
 				pageCur=pageCur-1;
 			}
@@ -206,7 +229,7 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 	 * 查询一个名片
 	 */
 	public String selectA() {
-		System.out.println(act);
+		
 		try {
 			acard=cd.selectA(card.getId());
 			
@@ -319,6 +342,16 @@ public class CardAction extends ActionSupport implements ModelDriven<Card>,Sessi
 	public Card getModel() {
 		// TODO Auto-generated method stub
 		return card;
+	}
+
+
+	public List getListPage() {
+		return listPage;
+	}
+
+
+	public void setListPage(List listPage) {
+		this.listPage = listPage;
 	}
 	
 

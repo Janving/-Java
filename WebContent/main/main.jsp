@@ -40,7 +40,7 @@
   <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
 
     <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+     <!-- <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>  -->
       <li class="am-dropdown" data-am-dropdown>
         <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
           <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
@@ -67,11 +67,12 @@
           <li><a href="main/addCard.jsp" target="center"><span class="am-icon-check"></span> 添加名片<span class="am-icon-star am-fr am-margin-right admin-icon-yellow"></span></a></li>
 
           <li><a href="card/queryCard.action?act=updateSelect" target="center"><span class="am-icon-th"></span> 删除/修改名片<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
-          <li><a href="card/queryCard.action" target="center"><span class="am-icon-calendar"></span> 查询名片</a></li>
-          
+
+          <li><a href="product/queryProduct.action" target="center"><span class="am-icon-calendar"></span>产品管理</a>
+           <li><a href="orderitem/queryallOrderItem.action" target="center"><span class="am-icon-table"></span> 订单页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
         </ul>
       </li>
-      <li><a href="main/userInfo.jsp" target="center"><span class="am-icon-table"></span> 修改密码</a></li>
+  
       <li><a href="main/userInfo.jsp" target="center"><span class="am-icon-pencil-square-o"></span> 基本信息</a></li>
       <li><a href="user/exit.action"><span class="am-icon-sign-out"></span> 注销</a></li>
     </ul>
@@ -91,7 +92,7 @@
     </div>
   </div>
   <div class="admin-content">
-    <iframe src="card/queryCard.action" name="center" height="1024"   width="100%"  frameborder="0"></iframe>
+    <iframe src="card/queryCard.action" name="center" height="1800px"   width="100%"  frameborder="0"></iframe>
   </div>
 
   <!-- sidebar end -->

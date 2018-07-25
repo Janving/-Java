@@ -6,6 +6,7 @@
         <action name="regist" class="action.UserAction" method="register">
             <result name="register">../index/register.jsp</result>
             <result>../index/login.jsp</result>
+            <result name="preregister">../index/presuccess.html</result>
         </action>
         
         <action name="login" class="action.UserAction" method="login">
@@ -28,6 +29,16 @@
         
         <action name="forgot" class="action.UserAction" method="forgot">
             <result>../index/emailsuccess.html</result>
+        </action>
+        
+        <action name="preregister" class="action.UserAction" method="preregister">
+            <result>../index/presuccess.html</result>
+        </action>
+        
+        <action name="confirm" class="action.UserAction" method="confirm">
+            <result>../index/login.jsp</result>
+            <result name="registerfail">../index/registerfail.html</result>
+            <result name="confirmfail">../index/confirmfail.html</result>
         </action>
     </package>
 

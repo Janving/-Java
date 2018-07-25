@@ -18,6 +18,72 @@
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
   <link rel="stylesheet" href="main/assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="main/assets/css/admin.css">
+  
+  <style type="text/css">
+#preview{width:300px;height:270px;border:1px solid #000;overflow:hidden; border:none; }
+#imghead {filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+img{ border:none;}
+</style>
+  
+  <script type="text/javascript">
+      //图片上传预览    IE是用了滤镜。
+        function previewImage(file)
+        {
+          var MAXWIDTH  = 300; 
+          var MAXHEIGHT = 270;
+          var div = document.getElementById('preview');
+          if (file.files && file.files[0])
+          {
+              div.innerHTML ='<img id=imghead>';
+              var img = document.getElementById('imghead');
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){img.src = evt.target.result;}
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                 
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+</script>   
+  
+  
 </head>
 
 <body>
@@ -34,19 +100,24 @@
       <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
         <div class="am-panel am-panel-default">
           <div class="am-panel-bd">
-            <div class="am-g">
-              <div class="am-u-md-4">
-                <img class="am-img-circle am-img-thumbnail" src="http://amui.qiniudn.com/bw-2014-06-19.jpg?imageView/1/w/1000/h/1000/q/80" alt=""/>
+             <div class="am-g">
+              <div class="am-u-md-4" id="preview">
+             
+               <s:if test="acard.newFileName!=null">
+                   <img alt="" width="250" height="250" src="logos/<s:property value="acard.newFileName"/>"/>
+                </s:if>
+               
+              
               </div>
+               <hr>
               <div class="am-u-md-8">
-                <p>上传头像 </p>
-                <form class="am-form">
+               
+                
                   <div class="am-form-group">
-                    <input type="file" id="user-pic">
-                    <p class="am-form-help">请选择要上传的文件...</p>
-                    <button type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
+                   
+                
                   </div>
-                </form>
+               
               </div>
             </div>
           </div>
@@ -116,12 +187,7 @@
             </div>
           </div>
         <div>
-               <s:file name="logo"/><br>
-                <s:if test="acard.newFileName!=null">
-                    <img alt="" width="50" height="50"
-                      src="logos/<s:property value="acard.newFileName"/>"/>
-                 </s:if>
-                 <s:hidden name="oldFileName" value="%{acard.newFileName}"/>
+               
                    
         </div>
 

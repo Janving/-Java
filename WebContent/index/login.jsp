@@ -18,7 +18,7 @@
 	<base href="<%=basePath %>">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Minimal and Clean Sign up / Login and Forgot Form by FreeHTML5.co</title>
+	<title>客户管理系统-登陆</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Free HTML5 Template by FreeHTML5.co" />
 	<meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
@@ -75,9 +75,7 @@
 			        <label for="password" class="sr-only">Password</label>
 			      </div>
 			      <div class="form-group">
-			        <label for="remember">
-			          <input type="checkbox" id="remember">
-			          保存用户名密码</label>
+			       
 		          </div>
 			      <div class="form-group">
 			        <p>没有注册？ <a href="index/register.jsp">注册</a> | <a href="index/forgot.html">忘记密码?</a></p>
@@ -94,7 +92,7 @@
 		      </div>
 				
 			</div>
-            <div class="copyrights">Collect from <a href="http://www.cssmoban.com/"  title="网站模板">网站模板</a></div>
+            <div class="copyrights">Collect from </a></div>
 			<div class="row"></div>
 			<div class="row" style="padding-top: 60px; clear: both;">
 				<div class="col-md-12 text-center">

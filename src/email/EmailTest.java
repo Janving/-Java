@@ -18,7 +18,7 @@ public class EmailTest {
     public static final String PWD = "a1505924551";
 
    
-    public void testSendEmail(String text,String email) throws Exception {
+    public void testSendEmail(String subject,String text,String email) throws Exception {
 
     	
         // 创建邮件配置
@@ -36,7 +36,7 @@ public class EmailTest {
         // 开启debug模式，可以看到更多详细的输入日志
         session.setDebug(true);
         //创建邮件
-        MimeMessage message = createEmail(session,text,email);
+        MimeMessage message = createEmail(session,text,email,subject);
         //获取传输通道
         Transport transport = session.getTransport();
         transport.connect(SMTPSERVER,ACCOUT, PWD);
@@ -46,14 +46,14 @@ public class EmailTest {
 
     }
 
-
+/*
     private email.MimeMessage createEmail(email.Session session, String text) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+*/
 
-
-	public MimeMessage createEmail(Session session,String text,String email) throws Exception {
+	public MimeMessage createEmail(Session session,String text,String email,String subject) throws Exception {
     	
        	
         // 根据会话创建邮件
@@ -68,7 +68,7 @@ public class EmailTest {
         // 设置邮件接收方
         msg.setRecipient(RecipientType.TO, receiveAddress);
         // 设置邮件标题
-        msg.setSubject("找回密码", "utf-8");
+        msg.setSubject(subject, "utf-8");
         msg.setText(text);
         // 设置显示的发件时间
         msg.setSentDate(new Date());
@@ -76,12 +76,12 @@ public class EmailTest {
         msg.saveChanges();
         return msg;
     }
-    public static void main(String []arg) throws Exception {
+  /*  public static void main(String []arg) throws Exception {
     	
     	EmailTest et= new EmailTest();
     	et.testSendEmail("6666666");
     }
     
-    
+    */
 }
 

@@ -64,29 +64,7 @@
     <div class="am-g">
 
       <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
-        <div class="am-panel am-panel-default">
-          <div class="am-panel-bd">
-            <div class="am-g">
-              <div class="am-u-md-4">
-                <img class="am-img-circle am-img-thumbnail" src="http://amui.qiniudn.com/bw-2014-06-19.jpg?imageView/1/w/1000/h/1000/q/80" alt=""/>
-              </div>
-              <div class="am-u-md-8">
-                <p>你可以使用<a href="#">gravatar.com</a>提供的头像或者使用本地上传头像。 </p>
-                <form class="am-form">
-                  <div class="am-form-group">
-                    <input type="file" id="user-pic">
-                    <p class="am-form-help">请选择要上传的文件...</p>
-                    <button type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="am-panel am-panel-default">
-          
-        </div>
+       
 
       </div>
 
@@ -104,7 +82,7 @@
           <div class="am-form-group">
             <label for="email" class="am-u-sm-3 am-form-label">电子邮件 / Email</label>
             <div class="am-u-sm-9">
-              <input type="text" id="email" name="email" placeholder="输入你的电子邮件 / Email" value="<s:property value="#session.user.Email"/>"/>
+              <input type="text" id="email" name="email" placeholder="输入你的电子邮件 / Email" value="<s:property value="#session.user.email"/>"/>
               <small>邮箱你懂得...</small>
             </div>
           </div>
